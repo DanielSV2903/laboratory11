@@ -64,9 +64,12 @@ public class AdjacencyMatrixGraph implements Graph {
     public boolean containsEdge(Object a, Object b) throws GraphException, ListException {
         if (isEmpty())
             throw new GraphException("Adjacency Matrix Graph is empty");
-//        if (adjacencyMatrix[indexOf(a)][indexOf(b)]>0||adjacencyMatrix[indexOf(b)][indexOf(a)]>0)
+//        int i= (int) adjacencyMatrix[indexOf(a)][indexOf(b)];
+//        int j=(int) adjacencyMatrix[indexOf(b)][indexOf(a)];
+//        if (i>0||j>0)
 //            return true;
-        return false;
+//        return false;
+        return !(util.Utility.compare(adjacencyMatrix[indexOf(a)][indexOf(b)],0)==0);
     }
 
     @Override
@@ -87,10 +90,10 @@ public class AdjacencyMatrixGraph implements Graph {
     }
 
     private int indexOf(Object element) {
-        for (int i=0;i<vertexList.length;i++){
-            if (util.Utility.compare(vertexList[i].data,element)==0)
-                return i;
-        }
+            for (int i=0;i<vertexList.length;i++){
+                if (util.Utility.compare(vertexList[i].data,element)==0)
+                    return i;
+            }
         return -1;
 //        int col=0;
 //        int row=0;
@@ -110,6 +113,7 @@ public class AdjacencyMatrixGraph implements Graph {
         if (!containsEdge(a,b))
             throw new GraphException("Theres no edge between ["+a+","+b+"]");
         adjacencyMatrix[indexOf(a)][indexOf(b)]=weight;
+        adjacencyMatrix[indexOf(b)][indexOf(a)]=weight;
     }
 
     @Override
@@ -117,22 +121,41 @@ public class AdjacencyMatrixGraph implements Graph {
         if (!containsVertex(a)||!containsVertex(b))
             throw new GraphException("Cannot add edge between vertexes["+a+","+b+"]");
         adjacencyMatrix[indexOf(a)][indexOf(b)]=weight;
+        adjacencyMatrix[indexOf(b)][indexOf(a)]=weight;
     }
 
     @Override
     public void removeVertex(Object element) throws GraphException, ListException {
-        if (!containsVertex(element))
-            throw new GraphException("Vertex does not exist");
+        if (isEmpty())
+            throw new GraphException("Adjacency Matrix Graph is empty");
         int index=indexOf(element);
-        for (int i=index;i<vertexList.length;i++){
-            Vertex temp=vertexList[i+1];
-            vertexList[i]=temp;
-        }
+        if (index!=-1){
+            //movemos todas las filas una posicion hacia arriba
+            for (int i=index;i<counter-1;i++){
+                vertexList[i]=vertexList[i+1];
+                for (int j=0;j<counter;j++)
+                    adjacencyMatrix[i][j]=adjacencyMatrix[i+1][j];
+            }
+            //mover una columna a la izquierda
+            for (int i=0;i<counter;i++){
+                for (int j=index;j<counter-1;j++)
+                    adjacencyMatrix[i][j]=adjacencyMatrix[i][j+1];
+            }
+            counter--;
+        }//que pasa si ya no quedan vertices
+         if (counter==0) initMatrix();
     }
 
     @Override
     public void removeEdge(Object a, Object b) throws GraphException, ListException {
-
+        if (!containsVertex(a)||!containsVertex(b))
+            throw new GraphException("Theres no edge between ["+a+","+b+"]");
+        int i=indexOf(a);
+        int j=indexOf(b);
+        if (i!=-1&&j!=-1){
+            adjacencyMatrix[j][i]=0;
+            adjacencyMatrix[i][j]=0;
+        }
     }
 
     // Recorrido en profundidad
@@ -208,11 +231,14 @@ public class AdjacencyMatrixGraph implements Graph {
         //agrega la informacion de los pesos
         for (int i = 0; i < counter; i++) {
             for (int j=0;j<counter;j++){
-                if (util.Utility.compare(adjacencyMatrix[i][j],0)!=0)
+                if (util.Utility.compare(adjacencyMatrix[i][j],0)!=0){
                     result+="\n There is edge between the vertexes: "+vertexList[i].data+" and "+vertexList[j].data;
+                    if (util.Utility.compare(adjacencyMatrix[i][j],1)!=0)
+                        result+="_____WEIGHT "+adjacencyMatrix[i][j];
+                }
             }
         }
 
-        return result;
+            return result;
     }
 }
