@@ -243,4 +243,12 @@ public class AdjacencyMatrixGraph implements Graph {
 
         return result;
     }
+
+    public Vertex[] getVertexList() {
+        return vertexList;
+    }
+
+    public Object[][] getAdjacencyMatrix() {
+        return adjacencyMatrix;
+    }
 }
