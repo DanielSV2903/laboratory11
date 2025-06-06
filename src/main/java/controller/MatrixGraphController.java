@@ -104,8 +104,6 @@ public class MatrixGraphController
         }
     }
 
-
-
     @javafx.fxml.FXML
     public void bfsTourOnAction(ActionEvent actionEvent) {
         tArea.clear();

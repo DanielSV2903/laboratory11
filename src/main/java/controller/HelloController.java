@@ -50,4 +50,11 @@ public class HelloController {
     @FXML
     public void matrixGraphOnAction(ActionEvent actionEvent) {loadPage("matrixGraph.fxml");
     }
+
+    @FXML
+    public void listGraphOnAction(ActionEvent actionEvent) {loadPage("adjacency-list-graph.fxml");}
+
+    @FXML
+    public void listOperationsOnAction(ActionEvent actionEvent) {
+    }
 }

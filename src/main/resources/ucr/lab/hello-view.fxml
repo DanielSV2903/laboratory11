@@ -21,7 +21,17 @@
                   <Font name="Arial" size="30.0" />
                </font>
             </Button>
+            <Button mnemonicParsing="false" onAction="#listGraphOnAction" prefHeight="62.0" prefWidth="300.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="List Graph" textFill="WHITE">
+               <font>
+                  <Font name="Arial" size="30.0" />
+               </font>
+            </Button>
             <Button layoutX="10.0" layoutY="134.0" mnemonicParsing="false" onAction="#matrixOperationsOnAction" prefHeight="62.0" prefWidth="365.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Matrix Operations" textFill="WHITE">
+               <font>
+                  <Font name="Arial" size="30.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#listOperationsOnAction" prefHeight="62.0" prefWidth="365.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="List Operations" textFill="WHITE">
                <font>
                   <Font name="Arial" size="30.0" />
                </font>

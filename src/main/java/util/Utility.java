@@ -29,6 +29,15 @@ public class Utility {
         return new Random().nextInt(bound);
     }
 
+    public static int random(int min, int max) {
+        if ( min >= max ){
+            int aux = min;
+            min = max;
+            max = aux;
+        }
+        return new Random().nextInt(max-min) + min;
+    }
+
     public static int compare(Object a, Object b) {
         switch (instanceOf(a, b)){
             case "Integer":

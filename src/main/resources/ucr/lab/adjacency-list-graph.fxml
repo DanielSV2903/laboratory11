@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.AdjacencyListGraphController"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdjacencyListGraphController">
+   <center>
+      <AnchorPane prefHeight="758.0" prefWidth="982.0">
+         <children>
+            <Pane prefHeight="74.0" prefWidth="982.0" style="-fx-background-color: #e85d04;">
+               <children>
+                  <Label layoutX="332.0" layoutY="11.0" prefHeight="53.0" prefWidth="319.0" text="Adjaceny List Graph" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane layoutY="74.0" prefHeight="685.0" prefWidth="982.0" style="-fx-background-color: #99d98c;">
+               <children>
+                  <Button layoutX="14.0" layoutY="15.0" mnemonicParsing="false" onAction="#randomizeOnAction" prefHeight="25.0" prefWidth="125.0" text="Randomize" />
+                  <Button layoutX="14.0" layoutY="59.0" mnemonicParsing="false" onAction="#containsEdgeOnAction" prefHeight="25.0" prefWidth="125.0" text="Contains Edge" />
+                  <Button layoutX="174.0" layoutY="14.0" mnemonicParsing="false" onAction="#containsVertexOnAction" prefHeight="25.0" prefWidth="125.0" text="Contains Vertex" />
+                  <Button layoutX="174.0" layoutY="59.0" mnemonicParsing="false" onAction="#toStringOnAction" prefHeight="25.0" prefWidth="125.0" text="To String" />
+                  <Button layoutX="334.0" layoutY="14.0" mnemonicParsing="false" onAction="#dfsTourOnAction" prefHeight="25.0" prefWidth="125.0" text="DFS Tour" />
+                  <Button layoutX="334.0" layoutY="59.0" mnemonicParsing="false" onAction="#bfsTourOnAction" prefHeight="25.0" prefWidth="125.0" text="BFS Tour" />
+                  <Label fx:id="labelEdges" layoutX="485.0" layoutY="27.0" prefHeight="30.0" prefWidth="477.0" />
+                  <TextArea fx:id="txtArea" layoutX="14.0" layoutY="191.0" prefHeight="450.0" prefWidth="345.0" />
+                  <Canvas fx:id="canvas" height="568.0" layoutX="374.0" layoutY="101.0" width="597.0" />
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

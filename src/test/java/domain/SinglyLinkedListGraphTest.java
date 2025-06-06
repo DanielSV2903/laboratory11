@@ -58,4 +58,4 @@ class SinglyLinkedListGraphTest {
             System.err.println("Error: " + e.getMessage());
         }
     }
-    }
+}
