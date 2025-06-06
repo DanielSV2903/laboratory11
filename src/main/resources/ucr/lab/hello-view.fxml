@@ -16,21 +16,36 @@
                         <Font name="Arial" size="30.0" />
                     </font>
                 </Button>
-                <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#graphicBTreeOnAction" prefHeight="62.0" prefWidth="300.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Graphic BTree" textFill="WHITE">
+                <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#adjMatrixGraphOnAction" prefHeight="62.0" prefWidth="300.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Adjacency Matrix Graph" textFill="WHITE">
                     <font>
                         <Font name="Arial" size="30.0" />
                     </font>
                 </Button>
-                <Button layoutX="10.0" layoutY="134.0" mnemonicParsing="false" onAction="#bTreeTourSortOnAction" prefHeight="62.0" prefWidth="365.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="BTree Tour" textFill="WHITE">
+                <Button layoutX="10.0" layoutY="134.0" mnemonicParsing="false" onAction="#adjListGraphOnAction" prefHeight="62.0" prefWidth="365.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Adjacency List Graph" textFill="WHITE">
                     <font>
                         <Font name="Arial" size="30.0" />
                     </font>
                 </Button>
-                <Button layoutX="10.0" layoutY="72.0" mnemonicParsing="false" onAction="#bTreeOperationsOnAction" prefHeight="62.0" prefWidth="323.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="BTree Operations" textFill="WHITE">
+                <Button layoutX="10.0" layoutY="72.0" mnemonicParsing="false" onAction="#linkedGraphOnAction" prefHeight="62.0" prefWidth="323.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Linked Graph" textFill="WHITE">
                     <font>
                         <Font name="Arial" size="30.0" />
                     </font>
                 </Button>
+            <Button mnemonicParsing="false" onAction="#adjMatrixOpsOnAction" prefHeight="62.0" prefWidth="349.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Adjacency Matrix Operations" textFill="WHITE">
+               <font>
+                  <Font name="Arial" size="30.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#adjListOpsOnAction" prefHeight="62.0" prefWidth="349.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Adjacency List Operations" textFill="WHITE">
+               <font>
+                  <Font name="Arial" size="30.0" />
+               </font>
+            </Button>
+            <Button layoutX="10.0" layoutY="320.0" mnemonicParsing="false" onAction="#LinkedGraphOpsOnAction" prefHeight="62.0" prefWidth="349.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Linked Graph Operations" textFill="WHITE">
+               <font>
+                  <Font name="Arial" size="30.0" />
+               </font>
+            </Button>
                 <Button layoutX="10.0" layoutY="196.0" mnemonicParsing="false" onAction="#Exit" prefHeight="62.0" prefWidth="334.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Exit" textFill="WHITE">
                     <font>
                         <Font name="Arial" size="30.0" />

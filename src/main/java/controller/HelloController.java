@@ -39,16 +39,40 @@ public class HelloController {
         this.bp.setCenter(ap);
     }
 
-    @FXML
+    @Deprecated
     public void bTreeTourSortOnAction(ActionEvent actionEvent) {
         loadPage("bTreeTour.fxml");
     }
 
-    @FXML
+    @Deprecated
     public void graphicBTreeOnAction(ActionEvent actionEvent) {loadPage("graphic-Btree.fxml");
     }
 
-    @FXML
+    @Deprecated
     public void bTreeOperationsOnAction(ActionEvent actionEvent) { loadPage("operations.fxml");
+    }
+
+    @FXML
+    public void adjMatrixGraphOnAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void adjMatrixOpsOnAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void adjListOpsOnAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void linkedGraphOnAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void LinkedGraphOpsOnAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void adjListGraphOnAction(ActionEvent actionEvent) {
     }
 }
