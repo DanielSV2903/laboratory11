@@ -2,6 +2,7 @@ package util;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import ucr.lab.HelloApplication;
 
@@ -25,10 +26,10 @@ public class FXUtility {
         Alert myalert = new Alert(Alert.AlertType.INFORMATION);
         myalert.setTitle(title);
         myalert.setHeaderText(headerText);
-        DialogPane dialogPane = myalert.getDialogPane();
-        String css = HelloApplication.class.getResource("dialog.css").toExternalForm();
-        dialogPane.getStylesheets().add(css);
-        dialogPane.getStyleClass().add("myDialog");
+        //DialogPane dialogPane = myalert.getDialogPane();
+        //String css = HelloApplication.class.getResource("dialog.css").toExternalForm();
+        //dialogPane.getStylesheets().add(css);
+        //dialogPane.getStyleClass().add("myDialog");
         return myalert;
     }
 

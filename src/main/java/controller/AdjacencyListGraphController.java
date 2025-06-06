@@ -3,12 +3,15 @@ package controller;
 import domain.AdjacencyListGraph;
 import domain.GraphException;
 import domain.list.ListException;
+import domain.queue.QueueException;
+import domain.stack.StackException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import util.FXUtility;
 import util.Utility;
 
 import java.util.ArrayList;
@@ -42,6 +45,12 @@ public class AdjacencyListGraphController {
 
     @javafx.fxml.FXML
     public void dfsTourOnAction(ActionEvent actionEvent) {
+        txtArea.clear();
+        try {
+            txtArea.setText(graph.dfs());
+        } catch (GraphException | ListException | StackException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @javafx.fxml.FXML
@@ -72,7 +81,7 @@ public class AdjacencyListGraphController {
 
                 } catch (GraphException e) {
                     // Si hay algún error al añadir el vértice, continuamos con el siguiente
-                    System.err.println("Error al añadir vértice: " + selectedLetter);
+                    e.printStackTrace();
                 }
             }
 
@@ -198,13 +207,77 @@ public class AdjacencyListGraphController {
 
     @javafx.fxml.FXML
     public void bfsTourOnAction(ActionEvent actionEvent) {
+        txtArea.clear();
+        try {
+            txtArea.setText(graph.bfs());
+        } catch (GraphException | QueueException | ListException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @javafx.fxml.FXML
     public void containsVertexOnAction(ActionEvent actionEvent) {
+        try {
+            TextInputDialog txt = FXUtility.dialog("Contains Vertex", "Ingrese el valor a comprobar");
+            txt.showAndWait();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+            if (txt.getResult() != null) {
+                String result = txt.getResult();
+                if (graph.containsVertex(result)) {
+                    alert.setTitle("Contains Vertex");
+                    alert.setHeaderText("El vértice si se encuentra en el grafo");
+                } else {
+                    alert.setAlertType(Alert.AlertType.ERROR);
+                    alert.setTitle("Vertex not found");
+                    alert.setHeaderText("No se ha podido encontrar el vértice en el grafo");
+                }
+                alert.showAndWait();
+            }
+
+        } catch (GraphException | ListException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @javafx.fxml.FXML
     public void containsEdgeOnAction(ActionEvent actionEvent) {
+        try {
+            TextInputDialog txt = FXUtility.dialog("Contains Edge", "Ingrese el valor a comprobar");
+            TextField tfV1 = new TextField();
+            TextField tfV2 = new TextField();
+            GridPane gp = new GridPane();
+            gp.add(new Label("Vertex 1"), 0, 0);
+            gp.add(new Label("Vertex 2"), 0, 1);
+            gp.add(tfV1, 1, 0);
+            gp.add(tfV2, 1, 1);
+            txt.getDialogPane().setContent(gp);
+            txt.showAndWait();
+
+            String v1 = tfV1.getText().trim();
+            String v2 = tfV2.getText().trim();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+            if (!v1.isBlank() && !v2.isBlank()) {
+                if (graph.containsEdge(v1, v2)) {
+                    alert.setTitle("Contains Edge");
+                    alert.setHeaderText("La arista si se encuentra entre los vértices " + v1 + " y " + v2 + " en el grafo" );
+                } else {
+                    alert.setAlertType(Alert.AlertType.ERROR);
+                    alert.setTitle("Edge not found");
+                    alert.setHeaderText("No se ha podido encontrar la arista en el grafo");
+                }
+                alert.showAndWait();
+            } else {
+                alert.setAlertType(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid data");
+                alert.setHeaderText("Entrada inválida aségurese de haber llenado ambas casillas");
+            }
+
+        } catch (GraphException | ListException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
