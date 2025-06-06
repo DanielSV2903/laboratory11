@@ -7,10 +7,13 @@ import domain.list.ListException;
 import domain.queue.QueueException;
 import domain.stack.StackException;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -115,10 +118,64 @@ public class MatrixGraphController
 
     @javafx.fxml.FXML
     public void containsVertexOnAction(ActionEvent actionEvent) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        if (!graph.isEmpty()) {
+            try {
+                alert.setTitle("Contains Vertex");
+                alert.setHeaderText(null);
+                TextField tf = new TextField();
+                GridPane gp = new GridPane();
+                gp.add(new Label("Vertex"), 0, 0);
+                gp.add(tf, 1, 0);
+                alert.getDialogPane().setContent(gp);
+                alert.showAndWait();
+                int v1 = Integer.parseInt(tf.getText().trim());
+                label.setText(graph.containsVertex(v1) ? "Vertex " + v1 + " is in the graph" : "Vertex " + v1 + " is not in the graph");
+            } catch (GraphException | ListException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setTitle("Is empty");
+            alert.setHeaderText(null);
+            alert.setContentText("Graph is empty");
+            alert.showAndWait();
+        }
+
     }
 
     @javafx.fxml.FXML
     public void containsEdgeOnAction(ActionEvent actionEvent) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        if (!graph.isEmpty()) {
+            try {
+                alert.setTitle("Contains Edge");
+                alert.setHeaderText(null);
+                TextField tfV1 = new TextField();
+                TextField tfV2 = new TextField();
+                GridPane gp = new GridPane();
+                gp.add(new Label("Vertex 1"), 0, 0);
+                gp.add(new Label("Vertex 2"), 0, 1);
+                gp.add(tfV1, 1, 0);
+                gp.add(tfV2, 1, 1);
+                alert.getDialogPane().setContent(gp);
+                alert.showAndWait();
+                int v1 = Integer.parseInt(tfV1.getText().trim());
+                int v2 = Integer.parseInt(tfV2.getText().trim());
+                if (graph.containsEdge(v1,v2) )
+                    label.setText("Theres an edge between " + v1 +" and "+v2+ " in the graph");
+                else
+                    label.setText("Theres no edge between " + v1 + " and " + v2 + " in the graph");
+            } catch (GraphException | ListException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setTitle("Is empty");
+            alert.setHeaderText(null);
+            alert.setContentText("Graph is empty");
+            alert.showAndWait();
+        }
     }
 
     private void drawGraph(List<Integer> vertices, int[][] matrix) {
@@ -131,6 +188,8 @@ public class MatrixGraphController
         int n = vertices.size();
 
         Map<Integer, Circle> nodeMap = new HashMap<>();//uso un mapa para mayor eficiencia
+        Map<Integer, Integer> dataMap = new HashMap<>();//uso un mapa para mayor eficiencia
+
 
         //creo los nodos del grafo
         for (int i = 0; i < n; i++) {
@@ -139,9 +198,14 @@ public class MatrixGraphController
             double y = centerY + radius * Math.sin(angle);
 
             Circle node = new Circle(x, y, 20, Color.AQUA);
+            int finalI = i;
+            node.setOnMouseClicked(event -> {
+                label.setText("Vertex "+vertices.get(finalI)+" is on index "+finalI);
+            });
             Text text = new Text(x - 10, y + 5, String.valueOf(vertices.get(i)));
 
             nodeMap.put(i, node);//asocio el circulo para llegar a el mas facilmente
+            dataMap.put(i,vertices.get(i));//meto la data del nodo para recuperarla despues
             graphPane.getChildren().addAll(node, text);
         }
 
@@ -152,10 +216,19 @@ public class MatrixGraphController
                     Circle origin = nodeMap.get(i);
                     Circle destiny = nodeMap.get(j);
 
-                    Line edge = new Line(origin.getCenterX(), origin.getCenterY(),
-                            destiny.getCenterX(), destiny.getCenterY());
-                    edge.setStrokeWidth(2);
+                    Line edge = new Line(origin.getCenterX(), origin.getCenterY()-10,
+                            destiny.getCenterX(), destiny.getCenterY()+10);
+                    edge.setStrokeWidth(4);
                     edge.setStroke(Color.GRAY);
+                    //Auxiliares para el lamda
+                    int finalI = i;
+                    int finalJ = j;
+                    edge.setOnMouseClicked(event -> {
+                        String txt="Edege between "+dataMap.get(finalI)+" and "+dataMap.get(finalJ)+" weight: "+matrix[finalI][finalJ];
+                        label.setText(txt);
+                        edge.setStroke(Color.GREEN);
+                        tArea.appendText(txt+"\n");
+                    });
 
                     //poner el peso en el medio de la linea
                     double x = (origin.getCenterX() + destiny.getCenterX()) / 2;
@@ -163,7 +236,7 @@ public class MatrixGraphController
                     Text weight = new Text(x, y,
                             String.valueOf(matrix[i][j]));
 
-                    graphPane.getChildren().addAll(edge, weight);
+                    graphPane.getChildren().addAll(edge, weight);//añadir el grafo al pane
                 }
             }
         }
