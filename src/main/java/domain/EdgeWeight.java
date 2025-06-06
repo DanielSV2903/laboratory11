@@ -1,12 +1,12 @@
 package domain;
 
 public class EdgeWeight {
-    private Object edge;
-    private Object weight;
+    private Object edge; //arista
+    private Object weight; //peso
 
     public EdgeWeight(Object edge, Object weight) {
-        this.edge=edge;
-        this.weight=weight;
+        this.edge = edge;
+        this.weight = weight;
     }
 
     public Object getEdge() {
@@ -27,7 +27,7 @@ public class EdgeWeight {
 
     @Override
     public String toString() {
-        if (weight==null)return "Edge="+ edge;
+        if(weight==null) return "Edge="+edge;
         else return "Edge="+edge+". Weight="+weight;
     }
 }
