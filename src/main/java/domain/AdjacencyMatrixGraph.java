@@ -238,7 +238,6 @@ public class AdjacencyMatrixGraph implements Graph {
                 }
             }
         }
-
             return result;
     }
 }

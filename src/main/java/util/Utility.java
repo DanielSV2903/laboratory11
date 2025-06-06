@@ -28,6 +28,13 @@ public class Utility {
         return new Random().nextInt(bound);
     }
 
+    public static int random(int startBound, int endBound) {
+        if (startBound > endBound) {
+            throw new IllegalArgumentException("Illegal Argument");
+        }
+        return new Random().nextInt(endBound - startBound + 1) + startBound;
+    }
+
     public static int compare(Object a, Object b) {
         switch (instanceOf(a, b)){
             case "Integer":

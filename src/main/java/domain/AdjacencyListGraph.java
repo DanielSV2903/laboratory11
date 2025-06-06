@@ -6,6 +6,7 @@ import domain.queue.LinkedQueue;
 import domain.queue.QueueException;
 import domain.stack.LinkedStack;
 import domain.stack.StackException;
+import util.Utility;
 
 public class AdjacencyListGraph implements Graph {
         private Vertex[] vertexList; //arreglo de objetos tupo vértice
@@ -71,7 +72,7 @@ public class AdjacencyListGraph implements Graph {
         @Override
         public void addEdge(Object a, Object b) throws GraphException, ListException {
             if (!containsVertex(a)||!containsVertex(b))
-                throw new GraphException("Cannot ad edge between vertexes["+a+","+b+"]");
+                throw new GraphException("Cannot add edge between vertexes["+a+","+b+"]");
             vertexList[indexOf(a)].edgesList.add(new EdgeWeight(b,null));
             //grafo no dirigido
             vertexList[indexOf(b)].edgesList.add(new EdgeWeight(a,null));
@@ -227,19 +228,32 @@ public class AdjacencyListGraph implements Graph {
             String result = "Adjacency List Graph Content...";
             //se muestran todos los vértices del grafo
             for (int i = 0; i < counter; i++) {
-                result+="\nThe vextex in the position: "+i+" is: "+vertexList[i].data;
+                result += "\nThe vextex in the position " + i + " is: " + vertexList[i].data;
             }
-            //agrega la informacion de los pesos
             for (int i = 0; i < counter; i++) {
-                for (int j=0;j<counter;j++){
-                    if (util.Utility.compare(adjacencyList[i][j],0)!=0){
-                        result+="\n There is edge between the vertexes: "+vertexList[i].data+" and "+vertexList[j].data;
-                        if (util.Utility.compare(adjacencyList[i][j],1)!=0)
-                            result+="_____WEIGHT "+adjacencyList[i][j];
+                for (int j = 0; j < counter; j++) {
+                    try {
+                        if (containsEdge(vertexList[i].data, vertexList[j].data)) {
+                            //si existe una arista (Edge)
+                            result += "\nThere is an edge between the vertexes:" + vertexList[i].data + "...."
+                                    + vertexList[j].data;
+
+                            //si existe un peso (Weight) en la arista (Edge), se muestra
+                            EdgeWeight newEW;
+                            for (int k = 0; k < vertexList[i].edgesList.size(); k++) {
+                                newEW = (EdgeWeight) vertexList[i].edgesList.getNode(k).data;
+                                if (Utility.compare(newEW, vertexList[j])==0){
+                                    result += "____WEIGHT: " + newEW.getWeight();
+                                }
+                            }
+                        }
+                    } catch (GraphException e) {
+                        throw new RuntimeException(e);
+                    } catch (ListException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }
-
             return result;
         }
     }
