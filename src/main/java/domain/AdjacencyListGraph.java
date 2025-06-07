@@ -156,7 +156,6 @@ public class AdjacencyListGraph implements Graph {
         }
     }
 
-    // Recorrido en profundidad
     @Override
     public String dfs() throws GraphException, StackException, ListException {
         setVisited(false);//marca todos los vertices como no vistados
@@ -211,13 +210,18 @@ public class AdjacencyListGraph implements Graph {
     }
 
     private int adjacentVertexNotVisited(int index) throws ListException {
+
         Object vertexData = vertexList[index].data;
         for (int i = 0; i < counter; i++) {
-            if(!vertexList[index].edgesList.isEmpty()
-                    && vertexList[i].edgesList.contains(new EdgeWeight(vertexData, null))
-                    && !vertexList[i].isVisited())
-                return i;//retorna la posicion del vertice adyacente no visitado
-        }//for i
+            try {
+                if (!vertexList[i].edgesList.isEmpty()
+                        && vertexList[i].edgesList.contains(new EdgeWeight(vertexData, null))
+                        && !vertexList[i].isVisited()) {
+                    return i;
+                }
+            } catch (ListException e) {
+            }
+        }
         return -1;
     }
 
