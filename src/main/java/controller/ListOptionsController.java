@@ -1,8 +1,10 @@
 package controller;
 
 import domain.AdjacencyListGraph;
+import domain.EdgeWeight;
 import domain.GraphException;
 import domain.list.ListException;
+import domain.list.SinglyLinkedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -11,6 +13,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import util.Utility;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -145,6 +148,10 @@ public class ListOptionsController {
             // Recolectar las posiciones de los vértices
             for (int i = 0; i < vertices.size(); i++) {
                 Object vertex = vertices.get(i);
+
+                // Obtener la lista de aristas del vértice
+                SinglyLinkedList vertexEdges = graph.getVertexList()[i].edgesList;
+
                 double angle = 2 * Math.PI * i / vertices.size();
                 double x = centerX + radius * Math.cos(angle);
                 double y = centerY + radius * Math.sin(angle);
@@ -169,35 +176,45 @@ public class ListOptionsController {
                         if (!vertex1.equals(vertex2) && graph.containsEdge(vertex1, vertex2)) {
                             double[] pos1 = vertexPositions.get(vertex1);
                             double[] pos2 = vertexPositions.get(vertex2);
-                            
+
+                            // Obtener el peso de la arista
+                            Object weight = new Object();
+                            SinglyLinkedList vertexEdges = graph.getVertexList()[vertices.indexOf(vertex1)].edgesList;
+                            for (int i = 0; i < vertexEdges.size(); i++) {
+                                // Comprobar si el nodo en la posición 'i' es nulo
+                                if (vertexEdges.getNode(i) != null) {
+                                    EdgeWeight edgeWeight = (EdgeWeight) vertexEdges.getNode(i).data;
+                                    if (Utility.compare(edgeWeight.getEdge(), vertex2) == 0) {
+                                        weight = edgeWeight.getWeight();  // Asignar el peso a la variable
+                                    }
+                                }
+                            }
 
                             // Si la arista no está ya registrada, la agregamos
                             if (drawnEdges.stream().noneMatch(edge -> edge.get("vertex1").equals(vertex1) && edge.get("vertex2").equals(vertex2))) {
                                 // Guardamos las aristas dibujadas
-
-
                                 Map<String, Object> edge = new HashMap<>();
                                 edge.put("vertex1", vertex1);
                                 edge.put("vertex2", vertex2);
                                 edge.put("pos1", pos1);
                                 edge.put("pos2", pos2);
                                 edge.put("selected", false); // No seleccionada por defecto
+                                edge.put("weight", weight);  // Guardamos el peso de la arista
                                 drawnEdges.add(edge);
                             }
 
-                            // Dibujar la arista (por defecto en negro o verde si está seleccionada)
+                            // Dibujar la arista (por defecto en negro o rojo si está seleccionada)
                             Map<String, Object> edge = drawnEdges.stream()
                                     .filter(e -> e.get("vertex1").equals(vertex1) && e.get("vertex2").equals(vertex2))
                                     .findFirst()
                                     .orElse(null);
 
                             if (edge != null) {
-                                // Si la arista está seleccionada, dibujarla en verde y aumentar el grosor
+                                // Si la arista está seleccionada, dibujarla en rojo y aumentar el grosor
                                 if ((Boolean) edge.get("selected")) {
-                                    gc.setStroke(Color.RED);      // Color verde
+                                    gc.setStroke(Color.RED);      // Color rojo
                                     gc.setLineWidth(3.5);           // Grosor mayor para la arista seleccionada
-                                    Object edgeWeight = edge.get("weight");
-                                    labelEdges.setText("Edge between the vertexes: " + vertex1 + " and " + vertex2 + ": " + graph);
+                                    labelEdges.setText("Edge between the vertexes: " + vertex1 + " and " + vertex2 + ". Weight: " + edge.get("weight"));
                                 } else {
                                     gc.setStroke(Color.BLACK);      // Color negro para las no seleccionadas
                                     gc.setLineWidth(1.5);           // Grosor normal para las no seleccionadas
@@ -208,9 +225,11 @@ public class ListOptionsController {
                     } catch (GraphException e) {
                         // Ignorar errores
                     }
+                    txtArea.setText(graph.toString());
                 }
             }
 
+            // Evento de clic en el canvas
             canvas.setOnMouseClicked(event -> {
                 double x = event.getX();
                 double y = event.getY();
@@ -219,8 +238,6 @@ public class ListOptionsController {
                 for (Map<String, Object> edge : drawnEdges) {
                     edge.put("selected", false);  // Restablecemos el estado de todas las aristas
                 }
-
-                drawGraph(vertices);
 
                 // Verificar si el clic está cerca de alguna arista
                 for (Map<String, Object> edge : drawnEdges) {
@@ -241,6 +258,7 @@ public class ListOptionsController {
             e.printStackTrace();
         }
     }
+
 
     private boolean isPointNearLine(double px, double py, double x1, double y1, double x2, double y2) {
         final double tolerance = 5.0; // Tolerancia de distancia para seleccionar la línea

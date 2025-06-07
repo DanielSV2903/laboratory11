@@ -115,6 +115,7 @@ public class AdjacencyListGraph implements Graph {
             vertexList[indexOf(a)].edgesList.add(new EdgeWeight(b, weight));
             //grafo no dirigido
             vertexList[indexOf(b)].edgesList.add(new EdgeWeight(a, weight));
+
         }
     }
 

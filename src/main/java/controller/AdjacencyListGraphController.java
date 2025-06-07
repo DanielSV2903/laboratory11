@@ -1,8 +1,10 @@
 package controller;
 
 import domain.AdjacencyListGraph;
+import domain.EdgeWeight;
 import domain.GraphException;
 import domain.list.ListException;
+import domain.list.SinglyLinkedList;
 import domain.queue.QueueException;
 import domain.stack.StackException;
 import javafx.event.ActionEvent;
@@ -29,16 +31,25 @@ public class AdjacencyListGraphController {
 
     private AdjacencyListGraph graph;
     private List<Map<String, Object>> drawnEdges = new ArrayList<>();
+    private List<Character> availableLetters;
 
     @FXML
     public void initialize() {
         graph = new AdjacencyListGraph(10);
+        availableLetters = new ArrayList<>();
+        for (char i = 'A'; i <= 'Z'; i++) {
+            availableLetters.add(i);
+        }
     }
 
     private void clear(){
         graph=new AdjacencyListGraph(10);
         txtArea.clear();
         labelEdges.setText("");
+        availableLetters = new ArrayList<>();
+        for (char i = 'A'; i <= 'Z'; i++) {
+            availableLetters.add(i);
+        }
     }
 
     @javafx.fxml.FXML
@@ -50,7 +61,7 @@ public class AdjacencyListGraphController {
     public void dfsTourOnAction(ActionEvent actionEvent) {
         txtArea.clear();
         try {
-            txtArea.setText(graph.dfs());
+            txtArea.setText("Recorrido DFS\n"+graph.dfs());
         } catch (GraphException | ListException | StackException e) {
             throw new RuntimeException(e);
         }
@@ -61,15 +72,11 @@ public class AdjacencyListGraphController {
         clear();
         try {
 
-            // Creamos una lista con todas las letras disponibles
-            List<Character> availableLetters = new ArrayList<>();
-            for (char i = 'A'; i <= 'Z'; i++) {
-                availableLetters.add(i);
-            }
-
             // Llenar el grafo con 10 vértices aleatorios
             for (int i = 0; i < 10; i++) {
-                graph.addVertex(availableLetters.get(util.Utility.random(availableLetters.size() - 1)));
+                Object element = availableLetters.get(Utility.random(availableLetters.size()));
+                graph.addVertex(element);
+                availableLetters.remove(element);
             }
 
             List<Object> vertices = new ArrayList<>();
@@ -113,6 +120,10 @@ public class AdjacencyListGraphController {
             // Recolectar las posiciones de los vértices
             for (int i = 0; i < vertices.size(); i++) {
                 Object vertex = vertices.get(i);
+
+                // Obtener la lista de aristas del vértice
+                SinglyLinkedList vertexEdges = graph.getVertexList()[i].edgesList;
+
                 double angle = 2 * Math.PI * i / vertices.size();
                 double x = centerX + radius * Math.cos(angle);
                 double y = centerY + radius * Math.sin(angle);
@@ -138,6 +149,19 @@ public class AdjacencyListGraphController {
                             double[] pos1 = vertexPositions.get(vertex1);
                             double[] pos2 = vertexPositions.get(vertex2);
 
+                            // Obtener el peso de la arista
+                            Object weight = new Object();
+                            SinglyLinkedList vertexEdges = graph.getVertexList()[vertices.indexOf(vertex1)].edgesList;
+                            for (int i = 0; i < vertexEdges.size(); i++) {
+                                // Comprobar si el nodo en la posición 'i' es nulo
+                                if (vertexEdges.getNode(i) != null) {
+                                    EdgeWeight edgeWeight = (EdgeWeight) vertexEdges.getNode(i).data;
+                                    if (Utility.compare(edgeWeight.getEdge(), vertex2) == 0) {
+                                        weight = edgeWeight.getWeight();  // Asignar el peso a la variable
+                                    }
+                                }
+                            }
+
                             // Si la arista no está ya registrada, la agregamos
                             if (drawnEdges.stream().noneMatch(edge -> edge.get("vertex1").equals(vertex1) && edge.get("vertex2").equals(vertex2))) {
                                 // Guardamos las aristas dibujadas
@@ -147,21 +171,22 @@ public class AdjacencyListGraphController {
                                 edge.put("pos1", pos1);
                                 edge.put("pos2", pos2);
                                 edge.put("selected", false); // No seleccionada por defecto
+                                edge.put("weight", weight);  // Guardamos el peso de la arista
                                 drawnEdges.add(edge);
                             }
 
-                            // Dibujar la arista (por defecto en negro o verde si está seleccionada)
+                            // Dibujar la arista (por defecto en negro o rojo si está seleccionada)
                             Map<String, Object> edge = drawnEdges.stream()
                                     .filter(e -> e.get("vertex1").equals(vertex1) && e.get("vertex2").equals(vertex2))
                                     .findFirst()
                                     .orElse(null);
 
                             if (edge != null) {
-                                // Si la arista está seleccionada, dibujarla en verde y aumentar el grosor
+                                // Si la arista está seleccionada, dibujarla en rojo y aumentar el grosor
                                 if ((Boolean) edge.get("selected")) {
-                                    gc.setStroke(Color.RED);      // Color verde
-                                    gc.setLineWidth(3.5);       // Grosor mayor para la arista seleccionada
-                                    labelEdges.setText("");
+                                    gc.setStroke(Color.RED);      // Color rojo
+                                    gc.setLineWidth(3.5);           // Grosor mayor para la arista seleccionada
+                                    labelEdges.setText("Edge between the vertexes: " + vertex1 + " and " + vertex2 + ". Weight: " + edge.get("weight"));
                                 } else {
                                     gc.setStroke(Color.BLACK);      // Color negro para las no seleccionadas
                                     gc.setLineWidth(1.5);           // Grosor normal para las no seleccionadas
@@ -172,9 +197,11 @@ public class AdjacencyListGraphController {
                     } catch (GraphException e) {
                         // Ignorar errores
                     }
+                    txtArea.setText(graph.toString());
                 }
             }
 
+            // Evento de clic en el canvas
             canvas.setOnMouseClicked(event -> {
                 double x = event.getX();
                 double y = event.getY();
@@ -183,8 +210,6 @@ public class AdjacencyListGraphController {
                 for (Map<String, Object> edge : drawnEdges) {
                     edge.put("selected", false);  // Restablecemos el estado de todas las aristas
                 }
-
-                drawGraph(vertices);
 
                 // Verificar si el clic está cerca de alguna arista
                 for (Map<String, Object> edge : drawnEdges) {
@@ -230,7 +255,7 @@ public class AdjacencyListGraphController {
     public void bfsTourOnAction(ActionEvent actionEvent) {
         txtArea.clear();
         try {
-            txtArea.setText(graph.bfs());
+            txtArea.setText("Recorrido BFS\n"+graph.bfs());
         } catch (GraphException | QueueException | ListException e) {
             throw new RuntimeException(e);
         }
@@ -282,7 +307,10 @@ public class AdjacencyListGraphController {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
             if (!v1.isBlank() && !v2.isBlank()) {
-                if (graph.containsEdge(v1, v2)) {
+                char v = v1.charAt(0);
+                char w = v2.charAt(0);
+
+                if (graph.containsEdge(v, w)) {
                     alert.setTitle("Contains Edge");
                     alert.setHeaderText("La arista si se encuentra entre los vértices " + v1 + " y " + v2 + " en el grafo" );
                 } else {
