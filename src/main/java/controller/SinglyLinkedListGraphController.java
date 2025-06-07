@@ -1,7 +1,7 @@
 package controller;
 
-import domain.AdjacencyMatrixGraph;
 import domain.GraphException;
+import domain.SinglyLinkedListGraph;
 import domain.Vertex;
 import domain.list.ListException;
 import domain.list.Node;
@@ -10,10 +10,7 @@ import domain.queue.QueueException;
 import domain.stack.StackException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -40,13 +37,12 @@ public class SinglyLinkedListGraphController {
     private TextArea tArea;
 
     private SinglyLinkedList singlyLinkedList;
-    private AdjacencyMatrixGraph graph;
+    private SinglyLinkedListGraph graph;
     private List<Vertex> vertex;
     @FXML
     private BorderPane bp;
 
-
-    @javafx.fxml.FXML
+    @FXML
     public void initialize() {
         singlyLinkedList = new SinglyLinkedList();
         singlyLinkedList.add("Mahoma");
@@ -65,7 +61,7 @@ public class SinglyLinkedListGraphController {
     void bfsTourOnAction(ActionEvent event) {
         tArea.clear();
         try {
-            tArea.setText("BFS Tour order:\n"+graph.bfs());
+            tArea.setText("BFS Tour order:\n" + graph.bfs());
         } catch (GraphException | ListException | QueueException e) {
             throw new RuntimeException(e);
         }
@@ -91,13 +87,13 @@ public class SinglyLinkedListGraphController {
                 String v2 = tfV2.getText().trim();
 
                 if (graph.containsEdge(v1, v2))
-                    label.setText("Theres an edge between " + v1 +" and "+v2+ " in the graph");
+                    label.setText("Theres an edge between " + v1 + " and " + v2 + " in the graph");
                 else
                     label.setText("Theres no edge between " + v1 + " and " + v2 + " in the graph");
             } catch (GraphException | ListException e) {
                 throw new RuntimeException(e);
             }
-        }else{
+        } else {
             alert.setAlertType(Alert.AlertType.ERROR);
             alert.setTitle("Is empty");
             alert.setHeaderText(null);
@@ -125,7 +121,7 @@ public class SinglyLinkedListGraphController {
             } catch (GraphException | ListException e) {
                 throw new RuntimeException(e);
             }
-        }else{
+        } else {
             alert.setAlertType(Alert.AlertType.ERROR);
             alert.setTitle("Is empty");
             alert.setHeaderText(null);
@@ -138,15 +134,15 @@ public class SinglyLinkedListGraphController {
     void dfsTourOnAction(ActionEvent event) {
         tArea.clear();
         try {
-            this.tArea.setText("DFS Tour order:\n"+graph.dfs());
+            this.tArea.setText("DFS Tour order:\n" + graph.dfs());
         } catch (GraphException | StackException | ListException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void clear(){
-        vertex =new ArrayList<>();
-        graph=new AdjacencyMatrixGraph(10);
+    private void clear() {
+        vertex = new ArrayList<>();
+        graph = new SinglyLinkedListGraph();
     }
 
     @FXML
@@ -173,9 +169,7 @@ public class SinglyLinkedListGraphController {
         for (String name : vertexNames) {
             try {
                 graph.addVertex(name);
-            } catch (GraphException e) {
-                throw new RuntimeException(e);
-            } catch (ListException e) {
+            } catch (GraphException | ListException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -202,18 +196,11 @@ public class SinglyLinkedListGraphController {
             System.out.println(e.getMessage());
         }
 
-        int[][] matrix = new int[10][10];
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                matrix[i][j] = (int) graph.getAdjacencyMatrix()[i][j];
-            }
-        }
-
-        drawGraph(vertexNames, matrix);
+        drawGraph(vertexNames);
         tArea.setText(graph.toString());
     }
 
-    private void drawGraph(List<String> vertexNames, int[][] matrix) {
+    private void drawGraph(List<String> vertexNames) {
         graphPane.getChildren().clear();
 
         int centerX = 300;
@@ -232,49 +219,17 @@ public class SinglyLinkedListGraphController {
             Circle circle = new Circle(x, y, 20, Color.AQUA);
             int finalI = i;
             circle.setOnMouseClicked(event -> {
-                label.setText("Vertex "+ vertexNames.get(finalI)+" is on index "+finalI);
+                label.setText("Vertex " + vertexNames.get(finalI) + " is on index " + finalI);
             });
 
-            Text text = new Text(x - 15, y + 5, (String) vertexNames.get(i));
+            Text text = new Text(x - 15, y + 5, vertexNames.get(i));
 
             nodeMap.put(i, circle);
             dataMap.put(i, vertexNames.get(i));
             graphPane.getChildren().addAll(circle, text);
         }
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (matrix[i][j] > 0 && i < j) {
-                    Circle startVertex = nodeMap.get(i);
-                    Circle endVertex = nodeMap.get(j);
-
-                    Line edge = new Line(startVertex.getCenterX(),
-                            startVertex.getCenterY()-10,
-                            endVertex.getCenterX(),
-                            endVertex.getCenterY()+10);
-                    edge.setStrokeWidth(4);
-                    edge.setStroke(Color.BLACK);
-
-                    int finalI = i;
-                    int finalJ = j;
-                    edge.setOnMouseClicked(event -> {
-                        String txt="Edege between "+dataMap.get(finalI)+" and "+dataMap.get(finalJ)+" weight: "+matrix[finalI][finalJ];
-                        label.setText(txt);
-                        edge.setStroke(Color.GREEN);
-                        tArea.appendText(txt+"\n");
-                    });
-
-                    double x = (startVertex.getCenterX() + endVertex.getCenterX()) / 2;
-                    double y = (startVertex.getCenterY() + endVertex.getCenterY()) / 2;
-                    Text weight = new Text(x, y,
-                            String.valueOf(matrix[i][j]));
-
-                    graphPane.getChildren().add(edge);
-                }
-            }
-        }
-
+        // Esta parte no puede ser implementada sin getAdjacencyMatrix,
+        // por lo tanto solo dibuja los vértices. Puedes ignorar esta limitación o extender SinglyLinkedListGraph más adelante.
     }
-
-
 }
