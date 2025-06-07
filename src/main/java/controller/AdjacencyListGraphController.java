@@ -31,16 +31,25 @@ public class AdjacencyListGraphController {
 
     private AdjacencyListGraph graph;
     private List<Map<String, Object>> drawnEdges = new ArrayList<>();
+    private List<Character> availableLetters;
 
     @FXML
     public void initialize() {
         graph = new AdjacencyListGraph(10);
+        availableLetters = new ArrayList<>();
+        for (char i = 'A'; i <= 'Z'; i++) {
+            availableLetters.add(i);
+        }
     }
 
     private void clear(){
         graph=new AdjacencyListGraph(10);
         txtArea.clear();
         labelEdges.setText("");
+        availableLetters = new ArrayList<>();
+        for (char i = 'A'; i <= 'Z'; i++) {
+            availableLetters.add(i);
+        }
     }
 
     @javafx.fxml.FXML
@@ -52,7 +61,7 @@ public class AdjacencyListGraphController {
     public void dfsTourOnAction(ActionEvent actionEvent) {
         txtArea.clear();
         try {
-            txtArea.setText(graph.dfs());
+            txtArea.setText("Recorrido DFS\n"+graph.dfs());
         } catch (GraphException | ListException | StackException e) {
             throw new RuntimeException(e);
         }
@@ -63,15 +72,11 @@ public class AdjacencyListGraphController {
         clear();
         try {
 
-            // Creamos una lista con todas las letras disponibles
-            List<Character> availableLetters = new ArrayList<>();
-            for (char i = 'A'; i <= 'Z'; i++) {
-                availableLetters.add(i);
-            }
-
             // Llenar el grafo con 10 vértices aleatorios
             for (int i = 0; i < 10; i++) {
-                graph.addVertex(availableLetters.get(util.Utility.random(availableLetters.size() - 1)));
+                Object element = availableLetters.get(Utility.random(availableLetters.size()));
+                graph.addVertex(element);
+                availableLetters.remove(element);
             }
 
             List<Object> vertices = new ArrayList<>();
@@ -250,7 +255,7 @@ public class AdjacencyListGraphController {
     public void bfsTourOnAction(ActionEvent actionEvent) {
         txtArea.clear();
         try {
-            txtArea.setText(graph.bfs());
+            txtArea.setText("Recorrido BFS\n"+graph.bfs());
         } catch (GraphException | QueueException | ListException e) {
             throw new RuntimeException(e);
         }
@@ -302,7 +307,10 @@ public class AdjacencyListGraphController {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
             if (!v1.isBlank() && !v2.isBlank()) {
-                if (graph.containsEdge(v1, v2)) {
+                char v = v1.charAt(0);
+                char w = v2.charAt(0);
+
+                if (graph.containsEdge(v, w)) {
                     alert.setTitle("Contains Edge");
                     alert.setHeaderText("La arista si se encuentra entre los vértices " + v1 + " y " + v2 + " en el grafo" );
                 } else {
