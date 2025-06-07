@@ -19,18 +19,18 @@ class SinglyLinkedListGraphTest {
                 graph.addVertex(i);
             }
             //aristas
-            graph.addEdgeWeight("A", "B", "Luis");
-            graph.addEdgeWeight("A", "C", "Ana");
-            graph.addEdgeWeight("A", "D", "Carlos");
-            graph.addEdgeWeight("B", "E", "Laura");
-            graph.addEdgeWeight("C", "F", "Pablo");
-            graph.addEdgeWeight("C", "G", "Sofía");
-            graph.addEdgeWeight("D", "H", "Pedro");
-            graph.addEdgeWeight("E", "F", "Lucía");
-            graph.addEdgeWeight("F", "G", "Mario");
-            graph.addEdgeWeight("G", "H", "María");
-            graph.addEdgeWeight("H", "I", "Andrés");
-            graph.addEdgeWeight("G", "J", "Paula");
+            graph.addEdgeWeight('A', 'B', "Luis");
+            graph.addEdgeWeight('A', 'C', "Ana");
+            graph.addEdgeWeight('A', 'D', "Carlos");
+            graph.addEdgeWeight('B', 'E', "Laura");
+            graph.addEdgeWeight('C', 'F', "Pablo");
+            graph.addEdgeWeight('C', 'G', "Sofía");
+            graph.addEdgeWeight('D', 'H', "Pedro");
+            graph.addEdgeWeight('E', 'F', "Lucía");
+            graph.addEdgeWeight('F', 'G', "Mario");
+            graph.addEdgeWeight('G', 'H', "María");
+            graph.addEdgeWeight('H', 'I', "Andrés");
+            graph.addEdgeWeight('G', 'J', "Paula");
 
             System.out.println(graph);
 
@@ -54,7 +54,7 @@ class SinglyLinkedListGraphTest {
             //g
             System.out.println(graph);
 
-        } catch (GraphException | ListException | StackException | QueueException e) {
+        } catch (GraphException | ListException | QueueException | StackException  e) {
             System.err.println("Error: " + e.getMessage());
         }
     }

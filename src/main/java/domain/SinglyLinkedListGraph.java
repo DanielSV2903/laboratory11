@@ -244,4 +244,8 @@ public class SinglyLinkedListGraph implements Graph {
 
         return result;
     }
+
+    public SinglyLinkedList getVertexList() {
+        return vertexList;
+    }
 }

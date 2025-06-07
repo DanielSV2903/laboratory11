@@ -40,10 +40,6 @@ public class HelloController {
     }
 
     @FXML
-    public void bTreeOperationsOnAction(ActionEvent actionEvent) { loadPage("operations.fxml");
-    }
-
-    @FXML
     public void matrixOperationsOnAction(ActionEvent actionEvent) {loadPage("matrixGraphOperations.fxml");
     }
 
