@@ -41,11 +41,6 @@
                   <Font name="Arial" size="30.0" />
                </font>
             </Button>
-            <Button layoutX="10.0" layoutY="72.0" mnemonicParsing="false" onAction="#bTreeOperationsOnAction" prefHeight="62.0" prefWidth="323.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="BTree Operations" textFill="WHITE">
-               <font>
-                  <Font name="Arial" size="30.0" />
-               </font>
-            </Button>
             <Button mnemonicParsing="false" onAction="#linkedListOperationsOnAction" prefHeight="62.0" prefWidth="323.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 0px 0px 2px 0px;" text="Linked Operations" textFill="WHITE">
                <font>
                   <Font name="Arial" size="30.0" />

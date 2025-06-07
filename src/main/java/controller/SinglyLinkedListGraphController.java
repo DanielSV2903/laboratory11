@@ -170,7 +170,6 @@ public class SinglyLinkedListGraphController {
             return;
         }
 
-        // AGREGAR VÉRTICES AL GRAFO
         for (String name : vertexNames) {
             try {
                 graph.addVertex(name);
@@ -181,7 +180,6 @@ public class SinglyLinkedListGraphController {
             }
         }
 
-        // Agregar conexiones (aristas) aleatorias
         int edgeQtty = Utility.random(20) + 1;
 
         try {
@@ -204,7 +202,6 @@ public class SinglyLinkedListGraphController {
             System.out.println(e.getMessage());
         }
 
-        // Copiar matriz
         int[][] matrix = new int[10][10];
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -219,13 +216,12 @@ public class SinglyLinkedListGraphController {
     private void drawGraph(List<String> vertexNames, int[][] matrix) {
         graphPane.getChildren().clear();
 
-        // Crear círculos para cada vértice
         int centerX = 300;
         int centerY = 300;
         int radius = 200;
         int n = vertexNames.size();
 
-        Map<Integer, Circle> nodeMap = new HashMap<>();//uso un mapa para mayor eficiencia
+        Map<Integer, Circle> nodeMap = new HashMap<>();
         Map<Integer, String> dataMap = new HashMap<>();
 
         for (int i = 0; i < n; i++) {
@@ -239,7 +235,6 @@ public class SinglyLinkedListGraphController {
                 label.setText("Vertex "+ vertexNames.get(finalI)+" is on index "+finalI);
             });
 
-            // Agregar el nombre del vértice como texto
             Text text = new Text(x - 15, y + 5, (String) vertexNames.get(i));
 
             nodeMap.put(i, circle);
@@ -247,14 +242,12 @@ public class SinglyLinkedListGraphController {
             graphPane.getChildren().addAll(circle, text);
         }
 
-        /// Dibujar las líneas/aristas basadas en la matriz de adyacencia
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if (matrix[i][j] > 0 && i < j) { // Si hay conexión entre los vértices i y j
+                if (matrix[i][j] > 0 && i < j) {
                     Circle startVertex = nodeMap.get(i);
                     Circle endVertex = nodeMap.get(j);
 
-                    // Dibujar una línea entre los dos vértices
                     Line edge = new Line(startVertex.getCenterX(),
                             startVertex.getCenterY()-10,
                             endVertex.getCenterX(),
@@ -271,7 +264,6 @@ public class SinglyLinkedListGraphController {
                         tArea.appendText(txt+"\n");
                     });
 
-                    //poner el peso en el medio de la linea
                     double x = (startVertex.getCenterX() + endVertex.getCenterX()) / 2;
                     double y = (startVertex.getCenterY() + endVertex.getCenterY()) / 2;
                     Text weight = new Text(x, y,
