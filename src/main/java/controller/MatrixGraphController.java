@@ -222,7 +222,7 @@ public class MatrixGraphController
                     int finalI = i;
                     int finalJ = j;
                     edge.setOnMouseClicked(event -> {
-                        String txt="Edege between "+dataMap.get(finalI)+" and "+dataMap.get(finalJ)+" weight: "+matrix[finalI][finalJ];
+                        String txt="Edge between "+dataMap.get(finalI)+" and "+dataMap.get(finalJ)+" weight: "+matrix[finalI][finalJ];
                         label.setText(txt);
                         edge.setStroke(Color.GREEN);
                         tArea.appendText(txt+"\n");

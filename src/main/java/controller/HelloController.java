@@ -56,6 +56,7 @@ public class HelloController {
 
     @FXML
     public void listOperationsOnAction(ActionEvent actionEvent) {
+        loadPage("list-graph-ops.fxml");
     }
 
     @FXML

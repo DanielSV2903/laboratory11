@@ -232,4 +232,8 @@ public class AdjacencyListGraph implements Graph {
         }
         return result;
     }
+
+    public Vertex[] getVertexList() {
+        return vertexList;
+    }
 }

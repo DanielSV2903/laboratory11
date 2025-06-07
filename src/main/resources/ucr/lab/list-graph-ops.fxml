@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ListOptionsController">
+   <center>
+      <AnchorPane prefHeight="758.0" prefWidth="982.0">
+         <children>
+            <Pane prefHeight="74.0" prefWidth="982.0" style="-fx-background-color: #e85d04;">
+               <children>
+                  <Label layoutX="332.0" layoutY="11.0" prefHeight="53.0" prefWidth="319.0" text="Adjaceny List Graph" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane layoutY="74.0" prefHeight="685.0" prefWidth="982.0" style="-fx-background-color: #99d98c;">
+               <children>
+                  <Button layoutX="14.0" layoutY="15.0" mnemonicParsing="false" onAction="#randomizeOnAction" prefHeight="25.0" prefWidth="177.0" text="Randomize" />
+                  <Button layoutX="14.0" layoutY="59.0" mnemonicParsing="false" onAction="#removeVertexOnAction" prefHeight="25.0" prefWidth="155.0" text="Remove Vertex" />
+                  <Button layoutX="206.0" layoutY="15.0" mnemonicParsing="false" onAction="#addVertexOnAction" prefHeight="25.0" prefWidth="125.0" text="Add Vertex" />
+                  <Button layoutX="184.0" layoutY="59.0" mnemonicParsing="false" onAction="#removeEdgeNWeightOnAction" prefHeight="25.0" prefWidth="183.0" text="Remove Edges &amp; Weights" />
+                  <Button layoutX="353.0" layoutY="15.0" mnemonicParsing="false" onAction="#addEdgeNWeightOnAction" prefHeight="25.0" prefWidth="184.0" text="Add Edges &amp; Weights" />
+                  <Button layoutX="384.0" layoutY="59.0" mnemonicParsing="false" onAction="#clearOnAction" prefHeight="25.0" prefWidth="153.0" text="Clear" />
+                  <Label fx:id="labelEdges" layoutX="14.0" layoutY="97.0" prefHeight="30.0" prefWidth="477.0" />
+                  <TextArea fx:id="txtArea" layoutX="14.0" layoutY="191.0" prefHeight="450.0" prefWidth="363.0" />
+                  <Canvas fx:id="canvas" height="523.0" layoutX="397.0" layoutY="148.0" width="571.0" />
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

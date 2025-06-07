@@ -3,15 +3,12 @@ package controller;
 import domain.AdjacencyListGraph;
 import domain.GraphException;
 import domain.list.ListException;
-import domain.queue.QueueException;
-import domain.stack.StackException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
-import util.FXUtility;
 import util.Utility;
 
 import java.util.ArrayList;
@@ -19,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AdjacencyListGraphController {
+public class ListOptionsController {
     @javafx.fxml.FXML
     private Canvas canvas;
     @javafx.fxml.FXML
@@ -28,30 +25,73 @@ public class AdjacencyListGraphController {
     private Label labelEdges;
 
     private AdjacencyListGraph graph;
-    private List<Map<String, Object>> drawnEdges = new ArrayList<>();
+    private List<Map<String, Object>> drawnEdges;
+    private List<Object> availableLetters;
 
     @FXML
     public void initialize() {
-        graph = new AdjacencyListGraph(10);
+        graph=new AdjacencyListGraph(10);
+        txtArea.clear();
+        labelEdges.setText("");
+        drawnEdges = new ArrayList<>();
+        availableLetters = new ArrayList<>();
+        for (char i = 'A'; i <= 'Z'; i++) {
+            availableLetters.add(i);
+        }
     }
 
     private void clear(){
         graph=new AdjacencyListGraph(10);
         txtArea.clear();
         labelEdges.setText("");
+        drawnEdges = new ArrayList<>();
+        availableLetters = new ArrayList<>();
+        for (char i = 'A'; i <= 'Z'; i++) {
+            availableLetters.add(i);
+        }
     }
 
-    @javafx.fxml.FXML
-    public void toStringOnAction(ActionEvent actionEvent) {
-        txtArea.setText(graph.toString());
-    }
-
-    @javafx.fxml.FXML
-    public void dfsTourOnAction(ActionEvent actionEvent) {
-        txtArea.clear();
+    private List<Object> getVertexData(){
         try {
-            txtArea.setText(graph.dfs());
-        } catch (GraphException | ListException | StackException e) {
+            List<Object> vertices = new ArrayList<>();
+            for (int i = 0; i < graph.size(); i++) {
+                vertices.add(graph.getVertexList()[i].data); // Obtenemos los datos de cada vértice
+            }
+            return vertices;
+        } catch (ListException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @javafx.fxml.FXML
+    public void addVertexOnAction(ActionEvent actionEvent) {
+        try {
+
+            Object element = availableLetters.get(Utility.random(availableLetters.size()));
+            graph.addVertex(element);
+            availableLetters.remove(element);
+
+            List<Object> vertices = getVertexData();
+
+            drawGraph(vertices);
+
+        } catch (GraphException | ListException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @javafx.fxml.FXML
+    public void removeVertexOnAction(ActionEvent actionEvent) {
+        try{
+            Object element = graph.getVertexList()[Utility.random(graph.size())].data;
+            graph.removeVertex(element);
+            availableLetters.add(element);
+
+            List<Object> vertices = getVertexData();
+
+            drawGraph(vertices);
+
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -60,22 +100,14 @@ public class AdjacencyListGraphController {
     public void randomizeOnAction(ActionEvent actionEvent) {
         clear();
         try {
-
-            // Creamos una lista con todas las letras disponibles
-            List<Character> availableLetters = new ArrayList<>();
-            for (char i = 'A'; i <= 'Z'; i++) {
-                availableLetters.add(i);
-            }
-
             // Llenar el grafo con 10 vértices aleatorios
             for (int i = 0; i < 10; i++) {
-                graph.addVertex(availableLetters.get(util.Utility.random(availableLetters.size() - 1)));
+                Object element = availableLetters.get(Utility.random(availableLetters.size()));
+                graph.addVertex(element);
+                availableLetters.remove(element);
             }
 
-            List<Object> vertices = new ArrayList<>();
-            for (int i = 0; i < graph.size(); i++) {
-                vertices.add(graph.getVertexList()[i].data); // Obtenemos los datos de cada vértice
-            }
+            List<Object> vertices = getVertexData();
 
             // Crear aristas aleatorias
             int maxEdges = util.Utility.random(5, 10);
@@ -137,10 +169,13 @@ public class AdjacencyListGraphController {
                         if (!vertex1.equals(vertex2) && graph.containsEdge(vertex1, vertex2)) {
                             double[] pos1 = vertexPositions.get(vertex1);
                             double[] pos2 = vertexPositions.get(vertex2);
+                            
 
                             // Si la arista no está ya registrada, la agregamos
                             if (drawnEdges.stream().noneMatch(edge -> edge.get("vertex1").equals(vertex1) && edge.get("vertex2").equals(vertex2))) {
                                 // Guardamos las aristas dibujadas
+
+
                                 Map<String, Object> edge = new HashMap<>();
                                 edge.put("vertex1", vertex1);
                                 edge.put("vertex2", vertex2);
@@ -160,8 +195,9 @@ public class AdjacencyListGraphController {
                                 // Si la arista está seleccionada, dibujarla en verde y aumentar el grosor
                                 if ((Boolean) edge.get("selected")) {
                                     gc.setStroke(Color.RED);      // Color verde
-                                    gc.setLineWidth(3.5);       // Grosor mayor para la arista seleccionada
-                                    labelEdges.setText("");
+                                    gc.setLineWidth(3.5);           // Grosor mayor para la arista seleccionada
+                                    Object edgeWeight = edge.get("weight");
+                                    labelEdges.setText("Edge between the vertexes: " + vertex1 + " and " + vertex2 + ": " + graph);
                                 } else {
                                     gc.setStroke(Color.BLACK);      // Color negro para las no seleccionadas
                                     gc.setLineWidth(1.5);           // Grosor normal para las no seleccionadas
@@ -206,7 +242,6 @@ public class AdjacencyListGraphController {
         }
     }
 
-
     private boolean isPointNearLine(double px, double py, double x1, double y1, double x2, double y2) {
         final double tolerance = 5.0; // Tolerancia de distancia para seleccionar la línea
         double dx = x2 - x1;
@@ -225,37 +260,29 @@ public class AdjacencyListGraphController {
         return Math.hypot(px - closestX, py - closestY) <= tolerance;
     }
 
-
     @javafx.fxml.FXML
-    public void bfsTourOnAction(ActionEvent actionEvent) {
-        txtArea.clear();
-        try {
-            txtArea.setText(graph.bfs());
-        } catch (GraphException | QueueException | ListException e) {
-            throw new RuntimeException(e);
-        }
+    public void clearOnAction(ActionEvent actionEvent) {
+        clear();
+        drawGraph(new ArrayList<>());
     }
 
     @javafx.fxml.FXML
-    public void containsVertexOnAction(ActionEvent actionEvent) {
+    public void addEdgeNWeightOnAction(ActionEvent actionEvent) {
         try {
-            TextInputDialog txt = FXUtility.dialog("Contains Vertex", "Ingrese el valor a comprobar");
-            txt.showAndWait();
+            List<Object> vertices = getVertexData();
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            boolean added = false;
+            while (!added) {
+                int weight = util.Utility.random(50) + 1;
+                Object v1 = vertices.get(Utility.random(vertices.size()));  // Vértice 1 aleatorio
+                Object v2 = vertices.get(Utility.random(vertices.size()));  // Vértice 2 aleatorio
 
-            if (txt.getResult() != null) {
-                String result = txt.getResult();
-                if (graph.containsVertex(result)) {
-                    alert.setTitle("Contains Vertex");
-                    alert.setHeaderText("El vértice si se encuentra en el grafo");
-                } else {
-                    alert.setAlertType(Alert.AlertType.ERROR);
-                    alert.setTitle("Vertex not found");
-                    alert.setHeaderText("No se ha podido encontrar el vértice en el grafo");
+                if (!graph.containsEdge(v1, v2)) {
+                    graph.addEdgeWeight(v1, v2, weight);
+                    added = true;
                 }
-                alert.showAndWait();
             }
+            drawGraph(vertices);
 
         } catch (GraphException | ListException e) {
             throw new RuntimeException(e);
@@ -263,39 +290,20 @@ public class AdjacencyListGraphController {
     }
 
     @javafx.fxml.FXML
-    public void containsEdgeOnAction(ActionEvent actionEvent) {
+    public void removeEdgeNWeightOnAction(ActionEvent actionEvent) {
         try {
-            TextInputDialog txt = FXUtility.dialog("Contains Edge", "Ingrese el valor a comprobar");
-            TextField tfV1 = new TextField();
-            TextField tfV2 = new TextField();
-            GridPane gp = new GridPane();
-            gp.add(new Label("Vertex 1"), 0, 0);
-            gp.add(new Label("Vertex 2"), 0, 1);
-            gp.add(tfV1, 1, 0);
-            gp.add(tfV2, 1, 1);
-            txt.getDialogPane().setContent(gp);
-            txt.showAndWait();
+            List<Object> vertices = getVertexData();
 
-            String v1 = tfV1.getText().trim();
-            String v2 = tfV2.getText().trim();
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
-            if (!v1.isBlank() && !v2.isBlank()) {
+            boolean erased = false;
+            while (!erased) {
+                Object v1 = vertices.get(Utility.random(vertices.size()));  // Vértice 1 aleatorio
+                Object v2 = vertices.get(Utility.random(vertices.size()));  // Vértice 2 aleatorio
                 if (graph.containsEdge(v1, v2)) {
-                    alert.setTitle("Contains Edge");
-                    alert.setHeaderText("La arista si se encuentra entre los vértices " + v1 + " y " + v2 + " en el grafo" );
-                } else {
-                    alert.setAlertType(Alert.AlertType.ERROR);
-                    alert.setTitle("Edge not found");
-                    alert.setHeaderText("No se ha podido encontrar la arista en el grafo");
+                    graph.removeEdge(v1, v2);
+                    erased = true;
                 }
-                alert.showAndWait();
-            } else {
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setTitle("Invalid data");
-                alert.setHeaderText("Entrada inválida aségurese de haber llenado ambas casillas");
             }
+            drawGraph(vertices);
 
         } catch (GraphException | ListException e) {
             throw new RuntimeException(e);
