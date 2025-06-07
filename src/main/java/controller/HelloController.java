@@ -61,4 +61,8 @@ public class HelloController {
     @FXML
     public void linkedGraphOnAction(ActionEvent actionEvent) { loadPage("singlyLinkedListGraph.fxml");
     }
+
+    @FXML
+    public void linkedListOperationsOnAction(ActionEvent actionEvent) {loadPage("singlyLinkedListGraphOperations.fxml");
+    }
 }
